@@ -143,7 +143,6 @@ exports.getUserInfo = async (req, res, next) => {
 		res.json({ result: 'success', userInfo })
 	} catch (err) {
 		// Catch error
-		// console.log(err)
 		res.statusCode = 400
 		res.json({ result: false, message: err.message })
 	}
@@ -158,7 +157,7 @@ exports.favorites = async (req, res, next) => {
 		res.json({ result: 'success', favorites: favorites.favorites })
 	} catch (err) {
 		// Catch error
-		// console.log(err)
+		console.log(err)
 		res.json({ result: false, message: err.message })
 	}
 }
@@ -243,7 +242,6 @@ exports.updateUserAddress = async (req, res, next) => {
 exports.history = async (req, res, next) => {
 	try {
 		var user = await User.findOne({ token: req.params.token })
-		// console.log('req.params', req.params)
 
 		var orders = await Order.find({ client: user._id }).populate('meals')
 
@@ -286,7 +284,6 @@ exports.delAllergies = async (req, res, next) => {
 			{ token: req.params.token },
 			{ allergies: allergies }
 		)
-		console.log(req.params.allergy)
 		var newAllergies = await User.findOne({ token: req.params.token }).populate(
 			'allergies'
 		)
@@ -304,8 +301,6 @@ exports.donts = async (req, res, next) => {
 		var donts = await User.findOne({ token: req.params.token })
 			.populate('dont')
 			.exec()
-
-		console.log('donts =>', donts.dont)
 
 		res.json({ result: true, donts: donts.dont })
 	} catch (err) {
