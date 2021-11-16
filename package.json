@@ -1,35 +1,35 @@
 {
-  "name": "vitejaifaim",
-  "version": "1.0.0",
-  "description": "react native app to order mysterious food",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "vjf"
-  },
-  "author": "bootcampers from la capsule",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^5.0.1",
-    "config": "^3.3.6",
-    "cookie-parser": "^1.4.5",
-    "dotenv": "^10.0.0",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "express-validator": "^6.13.0",
-    "http-errors": "~1.6.3",
-    "ip": "^1.1.5",
-    "mongoose": "^6.0.12",
-    "morgan": "^1.10.0",
-    "nodemailer": "^6.7.0",
-    "public-ip": "^4.0.4",
-    "stripe": "^8.186.0",
-    "uid2": "^1.0.0"
-  },
-  "devDependencies": {
-    "supertest": "^6.1.6"
-  }
+	"name": "vitejaifaim",
+	"version": "1.0.0",
+	"description": "react native app to order mysterious food",
+	"main": "server.js",
+	"scripts": {
+		"test": "jest"
+	},
+	"repository": {
+		"type": "git",
+		"url": "vjf"
+	},
+	"author": "bootcampers from la capsule",
+	"license": "ISC",
+	"dependencies": {
+		"bcrypt": "^5.0.1",
+		"config": "^3.3.6",
+		"cookie-parser": "^1.4.5",
+		"dotenv": "^10.0.0",
+		"ejs": "^3.1.6",
+		"express": "^4.17.1",
+		"express-validator": "^6.13.0",
+		"http-errors": "~1.6.3",
+		"ip": "^1.1.5",
+		"mongoose": "^6.0.12",
+		"morgan": "^1.10.0",
+		"nodemailer": "^6.7.0",
+		"public-ip": "^4.0.4",
+		"stripe": "^8.186.0",
+		"uid2": "^1.0.0"
+	},
+	"devDependencies": {
+		"supertest": "^6.1.6"
+	}
 }

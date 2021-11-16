@@ -11,10 +11,7 @@ const sendEmail = require('../functions/sendEmail')
 exports.signUp = async (req, res, next) => {
 	let result = false
 	let token = null
-	console.log('lastname ', req.body.lastNameFromFront)
-	console.log('firstname ', req.body.firstNameFromFront)
-	console.log('email ', req.body.emailFromFront)
-	console.log('pass ', req.body.passwordFromFront)
+
 	try {
 		// Check if this user already exist
 		let user = await User.findOne({ email: req.body.emailFromFront })
@@ -278,12 +275,10 @@ exports.getAllergies = async (req, res, next) => {
 }
 
 exports.delAllergies = async (req, res, next) => {
-	console.log('test routes delAllergies')
 	try {
 		var allergies = await User.findOne({ token: req.params.token })
 			.populate('allergies')
 			.exec()
-		console.log('allergies in back', allergies)
 		var allergyList = allergies.allergies
 		allergies = allergyList.filter(element => element !== req.params.allergy)
 
@@ -343,8 +338,6 @@ exports.adddonts = async (req, res, next) => {
 			{ new: true }
 		)
 
-		console.log('adddonts', adddonts.dont)
-
 		res.json({ result: true, donts: updateDonts })
 	} catch (err) {
 		res.json({ result: false, message: err.message })
@@ -353,12 +346,6 @@ exports.adddonts = async (req, res, next) => {
 
 exports.deletedonts = async (req, res, next) => {
 	try {
-		// var dontToDelete = await User.findOne({ token: req.params.token })
-		// 	.populate('dont')
-		// 	.exec()
-
-		console.log('deletedonts', req.body.dont)
-
 		const updateDonts = await User.findOneAndUpdate(
 			{ token: req.params.token },
 			{ $pull: { dont: req.params.dont } },

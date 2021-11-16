@@ -8,10 +8,11 @@ const {
 	payment,
 } = require('../controllers/orderController')
 
-
-router.post('/recap/:token', makeOrder) // route used to generate meal (oui le nom est pourrave)
+// ORDER ROUTES
+router.post('/recap/:token', makeOrder)
 router.get('/recap/:token', getOrder)
 router.put('/update-order/:id', updateOrder)
 router.get('/makeorderinfav/:token', makeOrderInFav)
 router.post('/payment', payment)
+
 module.exports = router

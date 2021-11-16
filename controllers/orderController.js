@@ -8,7 +8,7 @@ const dotenv = require('dotenv')
 dotenv.config({ path: './config.env' })
 const stripe = require('stripe')
 const stripePK = process.env.PUBLISHABLE_KEY
-const stripeSK = (process.env.SECRET_KEY, { apiVersion: "2020-08-27" })
+const stripeSK = (process.env.SECRET_KEY, { apiVersion: '2020-08-27' })
 
 // Distance max de livraison, en km
 const MAX_DISTANCE = 3
@@ -41,12 +41,12 @@ exports.makeOrder = async (req, res, next) => {
 			req.body.mood !== 'all'
 				? req.body.mood
 				: [
-					'healthy',
-					'soir de match',
-					'comme chez maman',
-					'cuisine du monde',
-					'a partager',
-				]
+						'healthy',
+						'soir de match',
+						'comme chez maman',
+						'cuisine du monde',
+						'a partager',
+				  ]
 
 		const lng = req.body.coords.lat
 		const lat = req.body.coords.lng
@@ -199,19 +199,21 @@ exports.makeOrderInFav = async (req, res, next) => {
 	}
 }
 exports.payment = async (req, res, next) => {
-	const stripe = require('stripe')('sk_test_51JrTrKGYLeZVv03JtV4ehIwMYnh4ZbIWpgUDdiIZlMi0OLOeGhlfcCeznynmhLCYv1vVizIvaLK5d8TI8hoa1MoM00vwNDE24q');
-	const { paymentMethodType, currency } = req.body;
+	const stripe = require('stripe')(
+		'sk_test_51JrTrKGYLeZVv03JtV4ehIwMYnh4ZbIWpgUDdiIZlMi0OLOeGhlfcCeznynmhLCYv1vVizIvaLK5d8TI8hoa1MoM00vwNDE24q'
+	)
+	const { paymentMethodType, currency } = req.body
 	var prix = req.body.price * 100
 	const params = {
 		payment_method_types: [paymentMethodType],
 		amount: prix,
-		currency: "eur",
+		currency: 'eur',
 	}
 	const paymentIntent = await stripe.paymentIntents.create({
 		payment_method_types: ['card'],
 		amount: params.amount,
 		currency: params.currency,
-	});
+	})
 	const clientSecret = paymentIntent.client_secret
 	// If this is for an ACSS payment, we add payment_method_options to create
 	// the Mandate.
@@ -226,23 +228,17 @@ exports.payment = async (req, res, next) => {
 		}
 	}
 
-	// Create a PaymentIntent with the amount, currency, and a payment method type.
-	//
-	// See the documentation [0] for the full list of supported parameters.
-	//
-	// [0] https://stripe.com/docs/api/payment_intents/create
 	try {
-		const paymentIntent = await stripe.paymentIntents.create(params);
-
+		const paymentIntent = await stripe.paymentIntents.create(params)
 		// Send publishable key and PaymentIntent details to client
 		res.send({
 			clientSecret: paymentIntent.client_secret,
-		});
+		})
 	} catch (e) {
 		return res.status(400).send({
 			error: {
 				message: e.message,
 			},
-		});
+		})
 	}
 }
