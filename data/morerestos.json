@@ -77,5 +77,13 @@
 			"type": "Point",
 			"coordinates": [47.788318, 2.666235]
 		}
+	},
+	{
+		"name": "Tata Suzette",
+		"meals": ["617aa7368b741bd15b9e9c4a", "617aa7368b741bd15b9e9c46", "617aa7368b741bd15b9e9c49", "6182587827861a279ca43555"],
+		"location": {
+			"type": "Point",
+			"coordinates": [43.082186, 6.156756]
+		}
 	}
 ]

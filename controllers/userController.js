@@ -1,10 +1,8 @@
 const uid2 = require('uid2')
+const bcrypt = require('bcrypt')
 const User = require('../models/Users')
 const Order = require('../models/Orders')
-const mealsModel = require('../models/Meals')
 
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
 const validateEmail = require('../functions/validateEmails') //import function to check emails
 const sendEmail = require('../functions/sendEmail')
 
@@ -45,13 +43,6 @@ exports.signUp = async (req, res, next) => {
 			phone: req.body.phoneFromFront,
 			password: hash,
 			token: uid2(32),
-			adresse: req.body.adresse,
-			allergies: [req.body.allergies],
-			regimeAlim: req.body.regimeAlim,
-			dont: [req.body.dont],
-			//orders et favorites doivent recevoir des clées étrangeres, la bdd etant vide on recupère juste des datas depuis postman en attendant
-			orders: [req.body.orders],
-			favorites: [req.body.favorites],
 		})
 		// Save user in MongoDB
 		saveUser = await newUser.save()
@@ -67,7 +58,7 @@ exports.signUp = async (req, res, next) => {
 			})
 		}
 		// Response Object
-		res.json({ result, saveUser, token })
+		res.json({ result, token })
 		// Catch error & send to front
 	} catch (err) {
 		let error = err.message
@@ -107,7 +98,7 @@ exports.signIn = async (req, res, next) => {
 			throw Error('Bad Email!')
 		}
 		// Response Object
-		res.json({ result, user, token })
+		res.json({ result, token })
 	} catch (err) {
 		// Catch error & send to front
 		// Create error variable with err.message
@@ -126,6 +117,8 @@ exports.getUserInfo = async (req, res, next) => {
 	try {
 		var user = await User.findOne({ token: req.params.token })
 
+		// CHANGE MODEL PASSWORD SELECT FALSE AND REMOVE ALL THIS CRAP
+		// ATTENTION SIGN IN SELECT +PASSWORD
 		var userInfo = {
 			firstName: user.firstName,
 			lastName: user.lastName,
@@ -150,9 +143,9 @@ exports.getUserInfo = async (req, res, next) => {
 
 exports.favorites = async (req, res, next) => {
 	try {
-		var favorites = await User.findOne({ token: req.params.token })
-			.populate('favorites')
-			.exec()
+		var favorites = await User.findOne({ token: req.params.token }).populate(
+			'favorites'
+		)
 
 		res.json({ result: 'success', favorites: favorites.favorites })
 	} catch (err) {
@@ -164,9 +157,9 @@ exports.favorites = async (req, res, next) => {
 
 exports.favoritesAdd = async (req, res, next) => {
 	try {
-		var favList = await User.findOne({ token: req.body.token })
-			.populate('favorites')
-			.exec()
+		var favList = await User.findOne({ token: req.body.token }).populate(
+			'favorites'
+		)
 		var favList = favList.favorites
 		var doublon
 
@@ -191,15 +184,12 @@ exports.favoritesAdd = async (req, res, next) => {
 
 exports.favoritesDel = async (req, res, next) => {
 	try {
-		var updateFavorites = await User.updateOne(
+		var updateFavorites = await User.findOneAndUpdate(
 			{ token: req.params.token },
-			{ $pull: { favorites: req.params.meal_id } }
+			{ $pull: { favorites: req.params.meal_id } },
+			{ new: true }
 		)
-
-		var favorites = await User.findOne({ token: req.params.token }).populate(
-			'favorites'
-		)
-		res.json({ result: 'success', favorites: favorites })
+		res.json({ result: 'success', favorites: updateFavorites.favorites })
 	} catch (err) {
 		// Catch error
 		res.statusCode = 400
@@ -231,7 +221,6 @@ exports.updateUserAddress = async (req, res, next) => {
 			{ token: req.params.token },
 			{ adresse: req.body.address }
 		)
-
 		res.json({ result: 'success' })
 	} catch (err) {
 		res.statusCode = 400
@@ -247,6 +236,7 @@ exports.history = async (req, res, next) => {
 
 		var meals = orders.map((order, i) => {
 			return {
+				// meals stores an array with one element
 				mealName: order.meals[0].name,
 				date: order.date,
 				mealId: order.meals[0]._id,
@@ -261,10 +251,8 @@ exports.history = async (req, res, next) => {
 
 exports.getAllergies = async (req, res, next) => {
 	try {
-		var allergies = await User.findOne({ token: req.params.token })
-			.populate('allergies')
-			.exec()
-		res.json({ result: 'success', allergies: allergies.allergies })
+		var user = await User.findOne({ token: req.params.token })
+		res.json({ result: 'success', allergies: user.allergies })
 	} catch (err) {
 		res.statusCode = 400
 		// Catch error
@@ -274,15 +262,16 @@ exports.getAllergies = async (req, res, next) => {
 
 exports.delAllergies = async (req, res, next) => {
 	try {
-		var allergies = await User.findOne({ token: req.params.token })
-			.populate('allergies')
-			.exec()
-		var allergyList = allergies.allergies
-		allergies = allergyList.filter(element => element !== req.params.allergy)
+		var user = await User.findOne({ token: req.params.token })
+		var allergyList = user.allergies
 
 		var delAllergies = await User.updateOne(
 			{ token: req.params.token },
-			{ allergies: allergies }
+			{
+				allergies: allergyList.filter(
+					element => element !== req.params.allergy
+				),
+			}
 		)
 		var newAllergies = await User.findOne({ token: req.params.token }).populate(
 			'allergies'
@@ -298,11 +287,8 @@ exports.delAllergies = async (req, res, next) => {
 
 exports.donts = async (req, res, next) => {
 	try {
-		var donts = await User.findOne({ token: req.params.token })
-			.populate('dont')
-			.exec()
-
-		res.json({ result: true, donts: donts.dont })
+		var user = await User.findOne({ token: req.params.token })
+		res.json({ result: true, donts: user.dont })
 	} catch (err) {
 		res.json({ result: false, message: err.message })
 	}
@@ -323,16 +309,11 @@ exports.addToBlacklist = async (req, res, next) => {
 
 exports.adddonts = async (req, res, next) => {
 	try {
-		var adddonts = await User.findOne({ token: req.params.token })
-			.populate('dont')
-			.exec()
-
 		const updateDonts = await User.findOneAndUpdate(
 			{ token: req.params.token },
 			{ $push: { dont: req.body.dont } },
 			{ new: true }
 		)
-
 		res.json({ result: true, donts: updateDonts })
 	} catch (err) {
 		res.json({ result: false, message: err.message })
@@ -346,7 +327,6 @@ exports.deletedonts = async (req, res, next) => {
 			{ $pull: { dont: req.params.dont } },
 			{ new: true }
 		)
-
 		res.json({ result: true, donts: updateDonts.dont })
 	} catch (err) {
 		res.json({ result: false, message: err.message })

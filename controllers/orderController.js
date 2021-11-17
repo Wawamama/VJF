@@ -1,14 +1,10 @@
-const mongoose = require('mongoose')
 const User = require('../models/Users')
 const Order = require('../models/Orders')
 const Meal = require('../models/Meals')
-const Restaurant = require('../models/Restaurants')
-const dotenv = require('dotenv')
-
-dotenv.config({ path: './config.env' })
 const stripe = require('stripe')
-const stripePK = process.env.PUBLISHABLE_KEY
-const stripeSK = (process.env.SECRET_KEY, { apiVersion: '2020-08-27' })
+
+const dotenv = require('dotenv')
+dotenv.config({ path: './config.env' })
 
 // Distance max de livraison, en km
 const MAX_DISTANCE = 3
@@ -155,17 +151,18 @@ exports.updateOrder = async (req, res, next) => {
 exports.makeOrderInFav = async (req, res, next) => {
 	try {
 		// Get the current user
-		const user = await User.findOne({ token: req.params.token })
+		const user = await User.findOne({ token: req.params.token }).populate(
+			'favorites'
+		)
 		if (!user) {
 			res.json({
 				result: 'fail',
 				message: 'Token not found. Cant find the user',
 			})
-			return
+			return // A verifier si utile
 		}
-		const meals = await user.populate('favorites')
 		// Get meals from favorites
-		const favmeals = meals.favorites
+		const favmeals = user.favorites
 		// select one random meal among the returned meals
 		const selectedMeal = favmeals[Math.floor(Math.random() * favmeals.length)]
 		// handle case when no meal fits all the criteria
@@ -199,38 +196,14 @@ exports.makeOrderInFav = async (req, res, next) => {
 	}
 }
 exports.payment = async (req, res, next) => {
-	const stripe = require('stripe')(
-		'sk_test_51JrTrKGYLeZVv03JtV4ehIwMYnh4ZbIWpgUDdiIZlMi0OLOeGhlfcCeznynmhLCYv1vVizIvaLK5d8TI8hoa1MoM00vwNDE24q'
-	)
-	const { paymentMethodType, currency } = req.body
-	var prix = req.body.price * 100
-	const params = {
-		payment_method_types: [paymentMethodType],
-		amount: prix,
-		currency: 'eur',
-	}
-	const paymentIntent = await stripe.paymentIntents.create({
-		payment_method_types: ['card'],
-		amount: params.amount,
-		currency: params.currency,
-	})
-	const clientSecret = paymentIntent.client_secret
-	// If this is for an ACSS payment, we add payment_method_options to create
-	// the Mandate.
-	if (paymentMethodType === 'acss_debit') {
-		params.payment_method_options = {
-			acss_debit: {
-				mandate_options: {
-					payment_schedule: 'sporadic',
-					transaction_type: 'personal',
-				},
-			},
-		}
-	}
-
 	try {
-		const paymentIntent = await stripe.paymentIntents.create(params)
-		// Send publishable key and PaymentIntent details to client
+		stripe(process.env.SECRET_KEY)
+		var prix = req.body.price * 100
+		const paymentIntent = await stripe.paymentIntents.create({
+			payment_method_types: ['card'],
+			amount: prix,
+			currency: 'eur',
+		})
 		res.send({
 			clientSecret: paymentIntent.client_secret,
 		})
