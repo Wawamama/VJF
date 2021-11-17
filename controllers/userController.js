@@ -206,7 +206,7 @@ exports.updateUser = async (req, res, next) => {
 			{ new: true }
 		)
 		if (!doc) {
-			throw new Error("User could'n be updated")
+			throw new Error("User couldn't be updated")
 		}
 		res.json({ result: 'success', doc })
 	} catch (err) {

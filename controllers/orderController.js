@@ -1,6 +1,7 @@
 const User = require('../models/Users')
 const Order = require('../models/Orders')
 const Meal = require('../models/Meals')
+const Restaurant = require('../models/Restaurants')
 const stripe = require('stripe')
 
 const dotenv = require('dotenv')
