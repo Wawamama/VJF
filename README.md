@@ -12,15 +12,20 @@
 
 Vite J'ai Faim is a mobile application I imagined and coded as my graduation project at [La Capsule Academy](https://www.lacapsule.academy/). 
 
-## :pencil: About the project
+## About the project
 
 Vite J'ai Faim is a food delivery mobile application for adventurous food lovers who spend too much time scrolling on Uber Eats or other food app.
 The idea is to let the app choose your meal for you, based on your mood and position. Surprise surprise!
 
-
 ## Made with
 
+### Technologies
+
 [React Native](https://reactnative.dev/), [Redux](https://redux.js.org/) [Express](https://expressjs.com/), [MongoDB](https://www.mongodb.com/)
+
+### Team 
+
+[fabbbbz](https://github.com/fabbbbz), [Clem123456](https://github.com/Clem123456), [sebastienk21](https://github.com/sebastienk21)
 
 ## Front-End Repository
 
