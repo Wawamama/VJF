@@ -7,10 +7,30 @@
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-<!-- ABOUT THE PROJECT -->
-<h2 id="about-the-project"> :pencil: About The Project</h2>
 
-<p align="justify"> 
-Mystery dish delivery mobile appliction
-</p>
+## What is it?
+
+Vite J'ai Faim is a mobile application I imagined and coded as my graduation project at [La Capsule Academy](https://www.lacapsule.academy/). 
+
+## :pencil: About the project
+
+Vite J'ai Faim is a food delivery mobile application for adventurous food lovers who spend too much time scrolling on Uber Eats or other food app.
+The idea is to let the app choose your meal for you, based on your mood and position. Surprise surprise!
+
+
+## Made with
+
+[React Native](https://reactnative.dev/), [Redux](https://redux.js.org/) [Express](https://expressjs.com/), [MongoDB](https://www.mongodb.com/)
+
+## Front-End Repository
+
+[https://github.com/Wawamama/VJF-front](https://github.com/Wawamama/VJF-front)
+
+## Video
+
+[Watch demo](https://www.youtube.com/watch?v=oxXcCU_cMTU&ab_channel=Warion)
+
+
+
+
 
