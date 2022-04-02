@@ -10,7 +10,10 @@
 
 ## What is it?
 
-Vite J'ai Faim is a mobile application I imagined and coded as my graduation project at [La Capsule Academy](https://www.lacapsule.academy/). 
+Vite J'ai Faim is a mobile application I imagined and coded as my graduation project at [La Capsule Academy](https://www.lacapsule.academy/). <br>
+This is the back-end repository. <br>
+See front-end [here](https://github.com/Wawamama/VJF-front)
+
 
 ## About the project
 
